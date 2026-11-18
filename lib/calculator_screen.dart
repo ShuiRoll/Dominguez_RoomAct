@@ -15,9 +15,19 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   final secondNumberController = TextEditingController();
 
   void calculate(String operation) {
-    final first = double.tryParse(firstNumberController.text.trim());
+    final firstText = firstNumberController.text.trim();
+    final secondText = secondNumberController.text.trim();
 
-    final second = double.tryParse(secondNumberController.text.trim());
+    if (firstText.isEmpty || secondText.isEmpty) {
+      setState(() {
+        result = 'Please enter both numbers';
+        operationLabel = 'Empty input';
+      });
+      return;
+    }
+
+    final first = double.tryParse(firstText);
+    final second = double.tryParse(secondText);
 
     if (first == null ||
         second == null ||
@@ -30,7 +40,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       return;
     }
 
-    if (operation == '÷' && second == 0) {
+    if (operation == '/' && second == 0) {
       setState(() {
         result = 'Cannot divide by zero';
         operationLabel = 'Please change the second number';
@@ -47,10 +57,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       case '-':
         answer = first - second;
         break;
-      case '×':
+      case '*':
         answer = first * second;
         break;
-      case '÷':
+      case '/':
         answer = first / second;
         break;
       default:
@@ -107,6 +117,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             const SizedBox(height: 24),
 
             TextField(
+              key: const Key('first_number_input'),
               controller: firstNumberController,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
@@ -122,6 +133,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             const SizedBox(height: 16),
 
             TextField(
+              key: const Key('second_number_input'),
               controller: secondNumberController,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
@@ -142,20 +154,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               runSpacing: 12,
               children: [
                 ElevatedButton(
+                  key: const Key('add_button'),
                   onPressed: () => calculate('+'),
                   child: const Text('+', style: TextStyle(fontSize: 24)),
                 ),
                 ElevatedButton(
+                  key: const Key('subtract_button'),
                   onPressed: () => calculate('-'),
-                  child: const Text('−', style: TextStyle(fontSize: 24)),
+                  child: const Text('-', style: TextStyle(fontSize: 24)),
                 ),
                 ElevatedButton(
-                  onPressed: () => calculate('×'),
-                  child: const Text('×', style: TextStyle(fontSize: 24)),
+                  key: const Key('multiply_button'),
+                  onPressed: () => calculate('*'),
+                  child: const Text('*', style: TextStyle(fontSize: 24)),
                 ),
                 ElevatedButton(
-                  onPressed: () => calculate('÷'),
-                  child: const Text('÷', style: TextStyle(fontSize: 24)),
+                  key: const Key('divide_button'),
+                  onPressed: () => calculate('/'),
+                  child: const Text('/', style: TextStyle(fontSize: 24)),
                 ),
               ],
             ),
@@ -179,6 +195,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   const SizedBox(height: 8),
                   Text(
                     result,
+                    key: const Key('calculator_result'),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 28,
@@ -192,6 +209,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             const SizedBox(height: 16),
 
             OutlinedButton.icon(
+              key: const Key('clear_button'),
               onPressed: clearCalculator,
               icon: const Icon(Icons.refresh),
               label: const Text('Clear'),

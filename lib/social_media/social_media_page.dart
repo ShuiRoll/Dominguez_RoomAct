@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 
-class SocialMediaPage extends StatelessWidget {
-  const SocialMediaPage({super.key});
+class SocialMediaPage extends StatefulWidget {
+  final String username;
 
+  const SocialMediaPage({super.key, required this.username});
+
+  @override
+  State<SocialMediaPage> createState() => _SocialMediaPageState();
+}
+
+class _SocialMediaPageState extends State<SocialMediaPage> {
   void showAccount(BuildContext context, String account) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('Selected account: $account')));

@@ -1,30 +1,46 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:dominguez_navigation_app/main.dart';
+import 'package:dominguez_navigation_app/calculator_screen.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('calculator performs operations and validates input',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: CalculatorScreen()),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.enterText(find.byKey(const Key('first_number_input')), '10');
+    await tester.enterText(find.byKey(const Key('second_number_input')), '2');
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.tap(find.byKey(const Key('add_button')));
     await tester.pump();
+    expect(find.text('12.0'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('subtract_button')));
+    await tester.pump();
+    expect(find.text('8.0'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('multiply_button')));
+    await tester.pump();
+    expect(find.text('20.0'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('divide_button')));
+    await tester.pump();
+    expect(find.text('5.0'), findsOneWidget);
+
+    await tester.enterText(find.byKey(const Key('second_number_input')), '0');
+    await tester.tap(find.byKey(const Key('divide_button')));
+    await tester.pump();
+    expect(find.text('Cannot divide by zero'), findsOneWidget);
+
+    await tester.enterText(find.byKey(const Key('first_number_input')), '');
+    await tester.tap(find.byKey(const Key('add_button')));
+    await tester.pump();
+    expect(find.text('Please enter both numbers'), findsOneWidget);
+
+    await tester.ensureVisible(find.byKey(const Key('clear_button')));
+    await tester.tap(find.byKey(const Key('clear_button')));
+    await tester.pump();
+    expect(find.text('0'), findsOneWidget);
   });
 }

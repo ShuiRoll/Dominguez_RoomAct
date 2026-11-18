@@ -32,7 +32,7 @@ class _SocialMediaPageState extends State<SocialMediaPage> {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      builder: (BuildContext context) {
+      builder: (context) {
         return CreatePostSheet(username: widget.username);
       },
     );
@@ -58,7 +58,10 @@ class _SocialMediaPageState extends State<SocialMediaPage> {
               itemBuilder: (context, index) {
                 final post = posts[index];
 
-                return PostCard(key: ObjectKey(post), post: post);
+                return PostCard(
+                  key: ObjectKey(posts[index]),
+                  post: posts[index],
+                );
               },
             ),
       floatingActionButton: FloatingActionButton(
